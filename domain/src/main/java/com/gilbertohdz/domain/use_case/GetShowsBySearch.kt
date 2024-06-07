@@ -3,13 +3,13 @@ package com.gilbertohdz.domain.use_case
 import com.gilbertohdz.domain.model.Show
 import com.gilbertohdz.domain.repository.TvMazeRepository
 
-class GetShowsPerPage(
+class GetShowsBySearch(
     private val repository: TvMazeRepository
 ) {
 
     suspend operator fun invoke(
-        page: Int = 1
+        query: String = ""
     ): Result<List<Show>> {
-        return repository.getShowsPerPage(page)
+        return repository.getShowsBySearch(query)
     }
 }

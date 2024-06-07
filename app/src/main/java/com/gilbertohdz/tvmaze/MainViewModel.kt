@@ -15,7 +15,7 @@ class MainViewModel @Inject constructor(
 
     fun executeInitialState() {
         viewModelScope.launch {
-            tvMazeUseCases.getShowsPerPage()
+            tvMazeUseCases.getShowsByPage()
                 .onSuccess { shows ->
                     Log.i("MainViewModel", "shows: ${shows.size}")
                 }

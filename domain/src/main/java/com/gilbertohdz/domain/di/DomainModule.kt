@@ -1,7 +1,8 @@
 package com.gilbertohdz.domain.di
 
 import com.gilbertohdz.domain.repository.TvMazeRepository
-import com.gilbertohdz.domain.use_case.GetShowsPerPage
+import com.gilbertohdz.domain.use_case.GetShowsByPage
+import com.gilbertohdz.domain.use_case.GetShowsBySearch
 import com.gilbertohdz.domain.use_case.TvMazeUseCases
 import dagger.Module
 import dagger.Provides
@@ -19,7 +20,8 @@ object DomainModule {
         repository: TvMazeRepository
     ): TvMazeUseCases {
         return TvMazeUseCases(
-            getShowsPerPage = GetShowsPerPage(repository = repository)
+            getShowsByPage = GetShowsByPage(repository = repository),
+            getShowsBySearch = GetShowsBySearch(repository = repository)
         )
     }
 }
