@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Delete application, if the error connection persist, and reinstalling the app still had the issue on my emulator. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>
