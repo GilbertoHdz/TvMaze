@@ -7,6 +7,6 @@ data class Episode(
     val number: Int,
     val type: String,
     val rating: Rating,
-    val image: Image,
+    val image: Image?,
     val summary: String,
 )

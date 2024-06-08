@@ -6,6 +6,8 @@ import com.gilbertohdz.domain.model.Show
 
 interface TvMazeRepository {
 
+    suspend fun getShowsById(showId: Int): Result<Show>
+
     suspend fun getShowsByPage(page: Int): Result<List<Show>>
 
     suspend fun getShowsBySearch(query: String): Result<List<Show>>

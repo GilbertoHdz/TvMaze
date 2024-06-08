@@ -9,6 +9,6 @@ data class Show (
     val rating: Rating,
     val language: String,
     val genres: List<String>,
-    val image: Image,
+    val image: Image?,
     val summary: String,
 )
