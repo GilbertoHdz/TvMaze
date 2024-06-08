@@ -10,6 +10,11 @@ import retrofit2.http.Query
 
 interface TvMazeApi {
 
+    @GET("shows/{show}")
+    suspend fun getShowById(
+        @Path("show") showId: Int,
+    ): ShowDto
+
     @GET("shows")
     suspend fun showsByPage(
         @Query("page") page: Int

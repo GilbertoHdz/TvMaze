@@ -7,6 +7,6 @@ data class EpisodeDto(
     val number: Int,
     val type: String,
     val rating: RatingModel,
-    val image: ImageModel,
-    val summary: String,
+    val image: ImageModel?,
+    val summary: String?,
 )

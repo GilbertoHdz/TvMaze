@@ -13,7 +13,7 @@ fun EpisodeDto.toEpisode(): Episode? {
         number = number,
         type = type,
         rating = Rating(rating.average),
-        image = Image(medium = image.medium, original = image.original),
-        summary = summary
+        image = image?.let { Image(medium = it.medium, original = it.original) },
+        summary = summary.orEmpty()
     )
 }

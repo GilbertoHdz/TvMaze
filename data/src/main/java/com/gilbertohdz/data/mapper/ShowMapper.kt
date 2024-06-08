@@ -16,8 +16,8 @@ fun ShowDto.toShow(): Show? {
         rating = Rating(rating.average),
         language = language,
         genres = genres,
-        image = Image(medium = image.medium, original = image.original),
-        summary = summary
+        image = image?.let { Image(medium = it.medium, original = it.original) },
+        summary = summary.orEmpty()
     )
 }
 
@@ -31,7 +31,7 @@ fun SearchDto.toShow(): Show? {
         rating = Rating(show.rating.average),
         language = show.language,
         genres = show.genres,
-        image = Image(medium = show.image.medium, original = show.image.original),
-        summary = show.summary
+        image = show.image?.let { Image(medium = it.medium, original = it.original) },
+        summary = show.summary.orEmpty()
     )
 }

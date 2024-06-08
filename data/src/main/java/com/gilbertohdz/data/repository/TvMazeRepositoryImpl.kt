@@ -13,6 +13,16 @@ class TvMazeRepositoryImpl(
     private val api: TvMazeApi
 ) : TvMazeRepository {
 
+    override suspend fun getShowsById(showId: Int): Result<Show> {
+        return try {
+            val showDto = api.getShowById(showId)
+            Result.success(showDto.toShow() ?: error("Show by id: $showId should not be null"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
     override suspend fun getShowsByPage(page: Int): Result<List<Show>> {
         return try {
             val showDto = api.showsByPage(page)

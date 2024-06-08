@@ -12,7 +12,7 @@ data class ShowDto(
     val ended: String?,
     val rating: RatingModel,
     val genres: List<String>,
-    val image: ImageModel,
-    val summary: String,
+    val image: ImageModel?,
+    val summary: String?,
     val embedded: EmbeddedModel?
 )
