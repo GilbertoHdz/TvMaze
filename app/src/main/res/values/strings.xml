@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">TvMaze</string>
+    <string name="app_name">Tv Maze</string>
+    <string name="title_activity_tv">Tv Maze</string>
+    <string name="show_details">Show details</string>
+    <string name="detail_no_episodes">No episodes</string>
+    <string name="season_param">Season %1$s</string>
+    <string name="component_search">Search</string>
+    <string name="not_found">Not found</string>
+    <string name="loading">Loading...</string>
+    <string name="back_to_the_previous_screen">Back to the previous screen</string>
 </resources>
