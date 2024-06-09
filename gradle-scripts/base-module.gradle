@@ -37,9 +37,13 @@ dependencies {
     kapt libs.hilt.compiler
 
     testImplementation(libs.junit)
-
-    androidTestImplementation(libs.androidx.test.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    testImplementation(libs.junit.android)
+    testImplementation(libs.truth)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.compose.ui.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mock.web.server)
 }
 
 // Allow references to generated code
