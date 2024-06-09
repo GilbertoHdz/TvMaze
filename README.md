@@ -11,6 +11,14 @@ A tvv application guide to display Shows, Series and Movies in one place.
 2. Open the project using Android Studio. (Android Studio Hedgehog | 2023.1.1 Patch 1)
 3. (Optional) Run test for :data: module
 
+## Design
+
+Design references
+
+* [JetStream](https://www.figma.com/community/file/1236080717929618236/jetstream-streaming-app) using color palette.
+* [Material Builder](https://material-foundation.github.io/material-theme-builder/) source primary color #A8C8FF from figma.
+* [TvDesign](https://developer.android.com/design/ui/tv) design for Android TV, guides, patterns and more.
+
 ## Built With
 
 Core architecture 
@@ -58,7 +66,8 @@ It leverages the following components from the Jetpack library:
 * Implement Persistence data to store favorite movies.
 * Implement ExoPlayer to reproduce short song or preview movie.
 * Implement Common composable Ui on :presentation: layer.
-* Implement Mobile project and Ui.
+* Implement Mobile Ui and include mobile project app module.
+* Improve Ui
 
 ## Meta
 Gilberto Hernández G. – [gilbertohdz.dev](https://gilbertohdz.dev/) - [@_GilbertoHdz_](https://twitter.com/_GilbertoHdz_) – ghernandez.9002@gmail.com
