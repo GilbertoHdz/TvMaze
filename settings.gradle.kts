@@ -15,7 +15,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "TvMaze"
 include(":app")
-include(":core")
+// include(":core")
 include(":data")
 include(":domain")
-include(":presentation")
+// include(":presentation")

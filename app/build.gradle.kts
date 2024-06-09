@@ -53,10 +53,10 @@ android {
 
 dependencies {
 
-    implementation(project(":presentation"))
+    // implementation(project(":presentation")) for further usage
     implementation(project(":domain"))
     implementation(project(":data"))
-    implementation(project(":core"))
+    // implementation(project(":core")) for further usage
 
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -73,6 +73,7 @@ dependencies {
 
     implementation(libs.androidx.tv.foundation)
     implementation(libs.androidx.tv.material)
+    implementation(libs.androidx.material)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -85,7 +86,4 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
