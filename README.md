@@ -27,6 +27,29 @@ It leverages the following components from the Jetpack library:
 * [ComposeTv](https://developer.android.com/training/tv/playback/compose)
 * [Navigation](https://developer.android.com/topic/libraries/architecture/navigation/)
 
+## Architecture
+* :data:
+```
+1. Data models as data transfer object to retrieve API request.
+2. Remote logic to call API.
+3. Mapping data from DTO to Domain models 
+4. Local persistence by room to store the data.
+5. Repositories implementation
+```
+* :domain:
+```
+1. Domain models to interact between data and presentation layer.
+2. Bussines logic and validation rules such UseCase or Interactors.
+3. Repository interface to define the action to implement for the :data: layer
+4. Independient and agnostic layer of project and libraries configuration.
+```
+* :app:
+```
+1. User interface interaction.
+2. Handle and manage the user events/interaction with the app.
+3. Lifecycle management and dependencies injection.
+4. Adopting the :domain: layer to manage the resources and application state.
+```
 
 ## TODO List
 * Implement Persistence data to store favorite movies.
