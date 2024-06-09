@@ -2,6 +2,9 @@
 
 A tvv application guide to display Shows, Series and Movies in one place.
 
+<img src="assets/tvmaze.gif" alt="Tv Maze preview" width="724" />
+
+
 ## Getting Started
 
 1. Clone the project to your local machine.
