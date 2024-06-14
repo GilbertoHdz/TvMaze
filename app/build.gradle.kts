@@ -86,8 +86,4 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
 
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.exoplayer.ui)
-    implementation(libs.media3.exoplayer.hls)
-    implementation(libs.media3.exoplayer.dash)
 }
