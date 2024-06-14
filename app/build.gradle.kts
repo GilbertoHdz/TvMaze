@@ -56,7 +56,7 @@ dependencies {
     // implementation(project(":presentation")) for further usage
     implementation(project(":domain"))
     implementation(project(":data"))
-    // implementation(project(":core")) for further usage
+    implementation(project(":player"))
 
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -86,4 +86,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
 
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.exoplayer.ui)
+    implementation(libs.media3.exoplayer.hls)
+    implementation(libs.media3.exoplayer.dash)
 }
