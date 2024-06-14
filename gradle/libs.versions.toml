@@ -35,6 +35,7 @@ mockk = "1.13.8"
 turbine = "0.7.0"
 mockkWebServer = "4.9.3"
 testRunner = "1.4.0"
+material3Android = "1.2.1"
 
 [libraries]
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
@@ -88,6 +89,7 @@ mock-web-server = { group = "com.squareup.okhttp3", name = "mockwebserver", vers
 compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

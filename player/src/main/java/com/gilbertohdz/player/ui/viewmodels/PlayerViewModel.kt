@@ -1,6 +1,9 @@
 package com.gilbertohdz.player.ui.viewmodels
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModel
@@ -17,6 +20,8 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
 
 ): ViewModel() {
+
+    var showControls by mutableStateOf(false)
 
     internal fun buildExoPlayer(context: Context, playerController: PlayerControllerImpl) : ExoPlayer {
         val playerConfig = playerController.playerConfig
