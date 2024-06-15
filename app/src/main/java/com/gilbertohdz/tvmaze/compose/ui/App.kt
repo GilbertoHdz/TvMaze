@@ -11,6 +11,7 @@ import com.gilbertohdz.tvmaze.compose.navigation.NavigationEvent
 import com.gilbertohdz.tvmaze.compose.navigation.Route
 import com.gilbertohdz.tvmaze.compose.ui.screens.catalog.CatalogBrowser
 import com.gilbertohdz.tvmaze.compose.ui.screens.details.DetailsScreen
+import com.gilbertohdz.tvmaze.compose.ui.screens.player.PlayerScreen
 import com.gilbertohdz.tvmaze.compose.ui.screens.search.SearchScreen
 
 @Composable
@@ -42,6 +43,11 @@ fun App(
                 backAction = {
                     navController.popBackStack()
                     navController.navigate(Route.HOME.route)
+                },
+                onNavigation = { navEvent ->
+                    if (navEvent is NavigationEvent.NavigatePlayer) {
+                        navController.navigate("/${Route.PLAYER.route}/${navEvent.movieId}")
+                    }
                 }
             )
         }
@@ -55,6 +61,16 @@ fun App(
                     }
                 },
             )
+        }
+        composable(
+            route = "/${Route.PLAYER.route}/{id}",
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            PlayerScreen()
         }
     }
 }

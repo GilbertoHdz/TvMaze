@@ -6,11 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.gilbertohdz.domain.use_case.TvMazeUseCases
 import com.gilbertohdz.tvmaze.compose.data.Movie
 import com.gilbertohdz.tvmaze.compose.data.toMovie
+import com.gilbertohdz.tvmaze.compose.navigation.NavigationEvent
+import com.gilbertohdz.tvmaze.compose.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +23,9 @@ class DetailsScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val tvMazeUseCases: TvMazeUseCases
 ) : ViewModel() {
+
+    private val _navEvent = Channel<NavigationEvent>()
+    val navEvent = _navEvent.receiveAsFlow()
 
     private val movieFlow = savedStateHandle.getStateFlow<Int?>("id", null)
 
@@ -57,6 +65,18 @@ class DetailsScreenViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000L),
         EpisodesState.Loading
     )
+
+    fun onEvent(event: DetailEvent) {
+        when (event) {
+            is DetailEvent.OnNavPlayerScreen -> { navToPlayerScreen(event.movie.id) }
+        }
+    }
+
+    private fun navToPlayerScreen(movieId: Int) {
+        viewModelScope.launch {
+            _navEvent.send(NavigationEvent.NavigatePlayer(Route.PLAYER, movieId = movieId))
+        }
+    }
 }
 
 sealed interface DetailsLoadingState {
