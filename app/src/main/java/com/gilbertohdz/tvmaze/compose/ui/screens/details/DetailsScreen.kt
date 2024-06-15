@@ -6,12 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gilbertohdz.tvmaze.compose.navigation.NavigationEvent
 import com.gilbertohdz.tvmaze.compose.ui.components.LoadingComponent
 import com.gilbertohdz.tvmaze.compose.ui.components.NotFoundAndBackComponent
 
 @Composable
 fun DetailsScreen(
     backAction: () -> Unit,
+    onNavigation: (NavigationEvent) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailsScreenViewModel = hiltViewModel()
 ) {
@@ -23,7 +25,8 @@ fun DetailsScreen(
         is DetailsLoadingState.Ready -> Details(
             movie = s.movie,
             modifier = modifier,
-            viewModel = viewModel
+            viewModel = viewModel,
+            onNavigation = onNavigation
         )
 
         is DetailsLoadingState.NotFound -> NotFoundAndBackComponent(
