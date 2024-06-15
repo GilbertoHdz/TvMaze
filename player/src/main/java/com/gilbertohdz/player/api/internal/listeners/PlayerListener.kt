@@ -4,6 +4,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import com.gilbertohdz.player.api.PlayerState
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
+import com.gilbertohdz.player.utils.logs.appLog
 
 internal class PlayerListener(
     private val viewModel: PlayerViewModel
@@ -11,9 +12,11 @@ internal class PlayerListener(
 
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
+        appLog("PlayerListener", """onEvents[
+            isPlaying: ${player.isPlaying}
+            bufferedPercentage: ${player.bufferedPercentage}
+        ]""".trimMargin())
         viewModel.isPlaying = player.isPlaying
-        viewModel.duration = player.duration
-        viewModel.contentPosition = player.contentPosition
         viewModel.bufferedPercentage = player.bufferedPercentage
         playbackState(player.playbackState)
     }

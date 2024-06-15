@@ -36,6 +36,7 @@ import androidx.tv.material3.Text
 import com.gilbertohdz.player.api.PlayerState
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
 import com.gilbertohdz.player.utils.logs.LogCompositions
+import com.gilbertohdz.player.utils.stringForTime
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalTvMaterial3Api::class)
 @Composable
@@ -59,8 +60,8 @@ fun PlayerControls(
     // Behaviors
     val controlsVisibility = remember(viewModel.showControls) { viewModel.showControls }
     val isPlaying = remember(viewModel.isPlaying) { viewModel.isPlaying }
-    val duration = remember(viewModel.duration) { viewModel.duration.coerceAtLeast(0) }
-    val timer = remember(viewModel.contentPosition) { viewModel.contentPosition }
+    val duration = remember(viewModel.duration) { viewModel.duration }
+    val currentPosition = remember(viewModel.currentPosition) { viewModel.currentPosition }
     val buffer = remember(viewModel.bufferedPercentage) { viewModel.bufferedPercentage }
     val playerState = remember(viewModel.playerState) { viewModel.playerState }
 
@@ -208,23 +209,17 @@ fun PlayerControls(
                         enabled = false,
                         onValueChange = { /*do nothing*/ },
                         valueRange = 0f..100f,
-                        colors =
-                        SliderDefaults.colors(
-                            disabledThumbColor = Color.Transparent,
-                            disabledActiveTrackColor = MaterialTheme.colorScheme.surface //.onDisabled
+                        colors = SliderDefaults.colors(
+                            disabledThumbColor = Color.Transparent
                         )
                     )
 
                     Slider(
-                        value = timer.toFloat(),
+                        value = currentPosition.toFloat(),
                         onValueChange = {
                             // onSeekChanged.invoke(it)
                         },
                         valueRange = 0f..duration.toFloat(),
-                        colors = SliderDefaults.colors(
-                            thumbColor = MaterialTheme.colorScheme.onBackground,
-                            activeTrackColor = MaterialTheme.colorScheme.onBackground
-                        )
                     )
                 }
 
@@ -236,7 +231,7 @@ fun PlayerControls(
                 ) {
                     Text(
                         modifier = Modifier
-                            .testTag("VideoTime")
+                            .testTag("VideoCurrentPosition")
                             .padding(start = 16.dp)
                             .animateEnterExit(
                                 enter = slideInVertically(
@@ -246,9 +241,26 @@ fun PlayerControls(
                                     targetOffsetY = { fullHeight: Int -> fullHeight }
                                 )
                             ),
-                        text = duration.toString(),
+                        text = stringForTime(currentPosition),
                         color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.titleSmall // .subTitle2
+                        style = MaterialTheme.typography.titleSmall
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .testTag("VideoDuration")
+                            .padding(start = 16.dp)
+                            .animateEnterExit(
+                                enter = slideInVertically(
+                                    initialOffsetY = { fullHeight: Int -> fullHeight }
+                                ),
+                                exit = slideOutVertically(
+                                    targetOffsetY = { fullHeight: Int -> fullHeight }
+                                )
+                            ),
+                        text = stringForTime(duration.toInt()),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleSmall
                     )
 
                     IconButton(
