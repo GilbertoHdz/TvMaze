@@ -8,7 +8,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,65 +24,49 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.media3.common.Player.STATE_ENDED
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.IconButton
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
-import com.gilbertohdz.player.api.PlayerController
+import com.gilbertohdz.player.api.PlayerState
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
+import com.gilbertohdz.player.utils.logs.LogCompositions
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalTvMaterial3Api::class)
 @Composable
 fun PlayerControls(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = hiltViewModel(),
-    playerController: () -> PlayerController,
-    isVisible: () -> Boolean,
-    isPlaying: () -> Boolean,
-    videoTimer: () -> Long,
-    bufferedPercentage: () -> Int,
-    playbackState: () -> Int,
     getTitle: () -> String,
-    totalDuration: () -> Long,
     isFullScreen: Boolean,
     onPauseToggle: () -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onReplay: () -> Unit,
     onForward: () -> Unit,
-    onSeekChanged: (newValue: Float) -> Unit,
     onFullScreenToggle: (isFullScreen: Boolean) -> Unit
 ) {
+    LogCompositions(tag = "PlayerControls")
 
-    val visible = remember(isVisible()) { isVisible() }
-
-    val playing = remember(isPlaying()) { isPlaying() }
-
-    val duration = remember(totalDuration()) { totalDuration().coerceAtLeast(0) }
-
-    val timer = remember(videoTimer()) { videoTimer() }
-
+    // UI
     val title = remember(getTitle()) { getTitle() }
 
-    val buffer = remember(bufferedPercentage()) { bufferedPercentage() }
-
-    val playerState = remember(playbackState()) {
-        playbackState()
-    }
-
-    val context = LocalContext.current
+    // Behaviors
+    val controlsVisibility = remember(viewModel.showControls) { viewModel.showControls }
+    val isPlaying = remember(viewModel.isPlaying) { viewModel.isPlaying }
+    val duration = remember(viewModel.duration) { viewModel.duration.coerceAtLeast(0) }
+    val timer = remember(viewModel.contentPosition) { viewModel.contentPosition }
+    val buffer = remember(viewModel.bufferedPercentage) { viewModel.bufferedPercentage }
+    val playerState = remember(viewModel.playerState) { viewModel.playerState }
 
     AnimatedVisibility(
         modifier = modifier,
-        visible = visible,
+        visible = controlsVisibility,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -164,14 +147,14 @@ fun PlayerControls(
                         painter = painterResource(
                             id =
                             when {
-                                playing -> {
+                                isPlaying -> {
                                     androidx.media3.ui.R.drawable.exo_ic_pause_circle_filled
                                 }
-                                playing.not() && playerState == STATE_ENDED -> {
+                                isPlaying.not() && playerState == PlayerState.ENDED -> {
                                     androidx.media3.ui.R.drawable.exo_icon_repeat_all
                                 }
                                 else -> {
-                                    androidx.media3.ui.R.drawable.exo_ic_pause_circle_filled
+                                    androidx.media3.ui.R.drawable.exo_ic_play_circle_filled
                                 }
                             }
                         ),
@@ -315,21 +298,13 @@ fun PlayerControls(
 private fun PreviewPlayerControls() {
     PlayerControls(
         modifier = Modifier.fillMaxSize(),
-        playerController = {  PlayerController() },
-        isVisible = { true },
-        isPlaying = { true },
-        videoTimer = { 0L },
-        totalDuration = { 0 },
-        bufferedPercentage = { 50 },
         isFullScreen = false,
         onForward = {},
         onNext = {},
         onPauseToggle = {},
         onPrevious = {},
         onReplay = {},
-        onSeekChanged = {},
         onFullScreenToggle = {},
         getTitle = { "" },
-        playbackState = { 1 }
     )
 }

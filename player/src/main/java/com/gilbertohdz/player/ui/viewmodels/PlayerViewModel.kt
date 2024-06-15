@@ -2,17 +2,23 @@ package com.gilbertohdz.player.ui.viewmodels
 
 import android.content.Context
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.gilbertohdz.player.api.PlayerController
+import com.gilbertohdz.player.api.PlayerState
 import com.gilbertohdz.player.api.internal.controllers.PlayerControllerImpl
 import com.gilbertohdz.player.api.internal.helpers.toMediaItem
+import com.gilbertohdz.player.api.internal.listeners.PlayerListener
 import com.gilbertohdz.player.api.media.playlist.PlaylistItem
+import com.gilbertohdz.player.utils.logs.appLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -21,7 +27,19 @@ class PlayerViewModel @Inject constructor(
 
 ): ViewModel() {
 
+    private val playerListener by lazy { PlayerListener(this@PlayerViewModel) }
+    lateinit var playerController: PlayerController
+
     var showControls by mutableStateOf(false)
+    var isPlaying by mutableStateOf(false)
+    var contentPosition by mutableLongStateOf(0)
+    var bufferedPercentage by mutableIntStateOf(0)
+    var playerState: PlayerState by mutableStateOf(PlayerState.BUFFERING)
+    var duration by mutableLongStateOf(0)
+
+    init {
+        appLog("PlayerViewModel", "init")
+    }
 
     internal fun buildExoPlayer(context: Context, playerController: PlayerControllerImpl) : ExoPlayer {
         val playerConfig = playerController.playerConfig
@@ -39,8 +57,9 @@ class PlayerViewModel @Inject constructor(
             this.setMediaItems(mediaItems)
             this.prepare()
             this.playWhenReady = playerConfig.autoStart
-
-            playerController.exoPlayer = this
+            this.addListener(playerListener)
+        }.also { exoPlayer ->
+            playerController.exoPlayer = exoPlayer
         }
     }
 

@@ -8,14 +8,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +26,7 @@ import androidx.media3.ui.PlayerView
 import com.gilbertohdz.player.api.PlayerController
 import com.gilbertohdz.player.api.internal.controllers.PlayerControllerImpl
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
+import com.gilbertohdz.player.utils.logs.LogCompositions
 
 
 @ExperimentalAnimationApi
@@ -35,7 +34,11 @@ import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
 fun VideoPlayer(
     playerController: PlayerController,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
 ) {
+
+    LogCompositions(tag = "VideoPlayer")
+
     val context = LocalContext.current
     val viewModel: PlayerViewModel = hiltViewModel()
     val exoPlayer = remember {
@@ -50,26 +53,26 @@ fun VideoPlayer(
 
     PlayerControls(
         modifier = Modifier.fillMaxSize(),
-        isVisible = { viewModel.showControls },
-        isPlaying = { true },
-        playbackState = { 1 },
-        totalDuration = { 100 },
-        bufferedPercentage = { 50 },
         getTitle = { "Gilinho" },
         isFullScreen = true,
         onPrevious = {
-                     // playerWrapper.exoPlayer.seekToPrevious()
+            // playerWrapper.exoPlayer.seekToPrevious()
         },
         onNext = {
-                 // playerWrapper.exoPlayer.seekToNext()
+            // playerWrapper.exoPlayer.seekToNext()
         },
         onReplay = {
-                   // playerWrapper.exoPlayer.seekBack()
+            // playerWrapper.exoPlayer.seekBack()
         },
         onForward = {
-                    // playerWrapper.exoPlayer.seekForward()
+            // playerWrapper.exoPlayer.seekForward()
         },
         onPauseToggle = {
+                        if (viewModel.isPlaying) {
+                            playerController.pause()
+                        } else {
+                            playerController.play()
+                        }
             /*when {
                 playerWrapper.exoPlayer.isPlaying -> {
                     playerWrapper.exoPlayer.pause()
@@ -85,17 +88,9 @@ fun VideoPlayer(
             isPlaying = isPlaying.not()
             */
         },
-        onSeekChanged = { position ->
-                        //  playerWrapper.exoPlayer.seekTo(position.toLong())
-        },
-        videoTimer = {
-                     // videoTimer
-                     35
-        },
-        onFullScreenToggle = {
+    ) {
 
-        }
-    )
+    }
 }
 
 @OptIn(UnstableApi::class)
@@ -150,6 +145,8 @@ internal fun Player(
 @Composable
 fun ShowVideoPreview() {
     VideoPlayer(
-        playerController = PlayerControllerImpl()
-    )
+        playerController = PlayerControllerImpl(),
+    ) {
+
+    }
 }

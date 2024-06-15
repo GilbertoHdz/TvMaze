@@ -49,23 +49,13 @@ class TvActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     ConnectivityStatus {
-                        Column {
-                            VideoPlayer(
-                                playerController = playerController,
-                                modifier = Modifier
-                                    .height(350.dp)
-                                    .width(350.dp)
-                            )
-                            Button(onClick = {
-                                playerController.play()
-                            }) {
-                                Text(text = "PLAY")
-                            }
-                            Button(onClick = {
-                                playerController.pause()
-                            }) {
-                                Text(text = "PAUSE")
-                            }
+                        VideoPlayer(
+                            playerController = playerController,
+                            modifier = Modifier
+                                .height(350.dp)
+                                .width(350.dp)
+                        ) {
+
                         }
                     }
                 }
