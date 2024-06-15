@@ -12,10 +12,6 @@ internal class PlayerListener(
 
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
-        appLog("PlayerListener", """onEvents[
-            isPlaying: ${player.isPlaying}
-            bufferedPercentage: ${player.bufferedPercentage}
-        ]""".trimMargin())
         viewModel.isPlaying = player.isPlaying
         viewModel.bufferedPercentage = player.bufferedPercentage
         playbackState(player.playbackState)

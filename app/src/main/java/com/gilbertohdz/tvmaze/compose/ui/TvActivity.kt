@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,7 @@ import com.gilbertohdz.player.api.PlayerControllerFactory
 import com.gilbertohdz.player.api.configuration.PlayerConfig
 import com.gilbertohdz.player.ui.views.VideoPlayer
 import com.gilbertohdz.tvmaze.compose.ui.components.ConnectivityStatus
+import com.gilbertohdz.tvmaze.compose.ui.screens.player.PlayerScreen
 import com.gilbertohdz.tvmaze.compose.ui.theme.TvMazeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,17 +33,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class TvActivity : ComponentActivity() {
 
     @OptIn(ExperimentalTvMaterial3Api::class, ExperimentalComposeUiApi::class,
-        ExperimentalCoroutinesApi::class, ExperimentalAnimationApi::class
+        ExperimentalCoroutinesApi::class, ExperimentalAnimationApi::class,
+        ExperimentalFoundationApi::class
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val playerController = PlayerControllerFactory.createPlayerController()
-            val playerConfig = PlayerConfig()
-            playerController.setup(playerConfig)
-
             TvMazeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -49,14 +48,7 @@ class TvActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     ConnectivityStatus {
-                        VideoPlayer(
-                            playerController = playerController,
-                            modifier = Modifier
-                                .height(350.dp)
-                                .width(350.dp)
-                        ) {
-
-                        }
+                        PlayerScreen()
                     }
                 }
             }

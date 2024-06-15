@@ -28,7 +28,15 @@ internal class PlayerControllerImpl : PlayerController {
         exoPlayer?.pause()
     }
 
+    override fun forward() {
+
+    }
+
+    override fun rewind() {
+
+    }
+
     override fun fullscreen() {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented -> Only Mobile Ui")
     }
 }

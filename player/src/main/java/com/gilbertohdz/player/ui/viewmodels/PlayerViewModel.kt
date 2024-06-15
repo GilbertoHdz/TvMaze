@@ -12,8 +12,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.gilbertohdz.player.api.PlayerController
 import com.gilbertohdz.player.api.PlayerState
-import com.gilbertohdz.player.api.internal.handlers.TickTimeHandler
 import com.gilbertohdz.player.api.internal.controllers.PlayerControllerImpl
+import com.gilbertohdz.player.api.internal.handlers.TickTimeHandler
 import com.gilbertohdz.player.api.internal.helpers.toMediaItem
 import com.gilbertohdz.player.api.internal.listeners.PlayerListener
 import com.gilbertohdz.player.api.media.playlist.PlaylistItem

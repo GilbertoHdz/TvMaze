@@ -7,11 +7,14 @@ import androidx.annotation.OptIn
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -47,49 +50,23 @@ fun VideoPlayer(
 
     androidx.compose.ui.platform.LocalLifecycleOwner.current.lifecycle.addObserver(viewModel.handleLifecycle(playerController))
 
-    Player(exoPlayer = exoPlayer, context = context, modifier = modifier) {
-        viewModel.showControls = !viewModel.showControls
-    }
+    Box(modifier = modifier) {
+        Player(
+            exoPlayer = exoPlayer,
+            context = context,
+            modifier = modifier
+        ) {
+            viewModel.showControls = !viewModel.showControls
+        }
 
-    PlayerControls(
-        modifier = Modifier.fillMaxSize(),
-        getTitle = { "Gilinho" },
-        isFullScreen = true,
-        onPrevious = {
-            // playerWrapper.exoPlayer.seekToPrevious()
-        },
-        onNext = {
-            // playerWrapper.exoPlayer.seekToNext()
-        },
-        onReplay = {
-            // playerWrapper.exoPlayer.seekBack()
-        },
-        onForward = {
-            // playerWrapper.exoPlayer.seekForward()
-        },
-        onPauseToggle = {
-                        if (viewModel.isPlaying) {
-                            playerController.pause()
-                        } else {
-                            playerController.play()
-                        }
-            /*when {
-                playerWrapper.exoPlayer.isPlaying -> {
-                    playerWrapper.exoPlayer.pause()
-                }
-                playerWrapper.exoPlayer.isPlaying.not() && playbackState == STATE_ENDED -> {
-                    playerWrapper.exoPlayer.seekTo(0, 0)
-                    playerWrapper.exoPlayer.playWhenReady = true
-                }
-                else -> {
-                    playerWrapper.exoPlayer.play()
-                }
-            }
-            isPlaying = isPlaying.not()
-            */
-        },
-    ) {
-
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            content()
+        }
     }
 }
 
@@ -114,6 +91,10 @@ internal fun Player(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
+            setShowNextButton(false)
+            setShowPreviousButton(false)
+            setShowRewindButton(false)
+            setShowFastForwardButton(false)
         }
     }
 

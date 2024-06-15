@@ -2,6 +2,9 @@ package com.gilbertohdz.tvmaze.compose.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Transparent
+val darkSemiTransparent = Color(0xAA000000)
+
 val primaryLight = Color(0xFF575992)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFE1E0FF)

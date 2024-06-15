@@ -39,7 +39,7 @@ private val DarkColorScheme = darkColorScheme(
     scrim = scrimDark,
     inverseSurface = inverseSurfaceDark,
     inverseOnSurface = inverseOnSurfaceDark,
-    inversePrimary = inversePrimaryDark
+    inversePrimary = inversePrimaryDark,
 )
 
 @OptIn(ExperimentalTvMaterial3Api::class)
@@ -80,7 +80,7 @@ fun TvMazeTheme(
 ) {
     val colorScheme = when {
         darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        else -> DarkColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
