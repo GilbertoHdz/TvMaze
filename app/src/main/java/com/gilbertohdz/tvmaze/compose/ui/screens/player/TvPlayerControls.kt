@@ -5,12 +5,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.tv.material3.ExperimentalTvMaterial3Api
+import com.gilbertohdz.player.api.PlayerController
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
 import com.gilbertohdz.player.utils.logs.LogCompositions
 import com.gilbertohdz.tvmaze.compose.ui.components.NextButton
@@ -34,12 +38,14 @@ import com.gilbertohdz.tvmaze.compose.ui.components.RewindButton
 import com.gilbertohdz.tvmaze.compose.ui.components.Seekbar
 import com.gilbertohdz.tvmaze.compose.ui.components.SkipButton
 import com.gilbertohdz.tvmaze.compose.ui.theme.AppDefaults
+import com.gilbertohdz.tvmaze.compose.ui.theme.darkSemiTransparent
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalTvMaterial3Api::class)
 @Composable
 fun TvPlayerControls(
     modifier: Modifier = Modifier,
+    playerController: PlayerController,
     viewModel: PlayerViewModel = hiltViewModel(),
 ) {
     LogCompositions(tag = "TvPlayerControls")
@@ -73,64 +79,76 @@ fun TvPlayerControls(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(AppDefaults.gap.item),
-            modifier = modifier,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(darkSemiTransparent) // Color negro semi-transparente
         ) {
-
-            ElapsedTimeIndicator(currentPosition, duration, {  }, {  })
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(
-                    AppDefaults.gap.default,
-                    Alignment.CenterHorizontally
-                ),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(controlsRowRequest)
-                    .onFocusChanged {
-                        if (it.isFocused) {
-                            playPauseButton.requestFocus()
-                        }
-                    }
-                    .focusable(),
+            Column(
+                verticalArrangement = Arrangement.spacedBy(AppDefaults.gap.item),
+                modifier = modifier.padding(PaddingValues(horizontal = 36.dp, vertical = 16.dp)),
             ) {
-                PreviousButton(
-                    onClick = {  },
-                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+
+                ElapsedTimeIndicator(
+                    currentPosition = currentPosition,
+                    duration = duration,
+                    forward = { playerController.forward() },
+                    rewind = { playerController.rewind() }
                 )
 
-                RewindButton(
-                    onClick = { },
-                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
-                )
-
-                PlayPauseButton(
-                    isPlaying = isPlaying,
-                    onClick = {
-                        if (isPlaying) {
-                            // pause()
-                        } else {
-                            // play()
-                        }
-                    },
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(
+                        AppDefaults.gap.default,
+                        Alignment.CenterHorizontally
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .size(AppDefaults.iconButtonSize.large.intoDpSize())
-                        .focusRequester(playPauseButton)
-                )
+                        .fillMaxWidth()
+                        .focusRequester(controlsRowRequest)
+                        .onFocusChanged {
+                            if (it.isFocused) {
+                                playPauseButton.requestFocus()
+                            }
+                        }
+                        .focusable(),
+                ) {
+                    PreviousButton(
+                        onClick = {  },
+                        modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                    )
 
-                SkipButton(
-                    onClick = {  },
-                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
-                )
+                    RewindButton(
+                        onClick = { },
+                        modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                    )
 
-                NextButton(
-                    onClick = { },
-                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
-                )
+                    PlayPauseButton(
+                        isPlaying = isPlaying,
+                        onClick = {
+                            if (isPlaying) {
+                                playerController.pause()
+                            } else {
+                                playerController.play()
+                            }
+                        },
+                        modifier = Modifier
+                            .size(AppDefaults.iconButtonSize.large.intoDpSize())
+                            .focusRequester(playPauseButton)
+                    )
+
+                    SkipButton(
+                        onClick = {  },
+                        modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                    )
+
+                    NextButton(
+                        onClick = { },
+                        modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                    )
+                }
             }
         }
+
     }
 }
 
@@ -138,7 +156,7 @@ fun TvPlayerControls(
 private fun ElapsedTimeIndicator(
     currentPosition: Int,
     duration: Int,
-    skip: () -> Unit,
+    forward: () -> Unit,
     rewind: () -> Unit,
     modifier: Modifier = Modifier,
     knobSize: Dp = 8.dp
@@ -153,7 +171,7 @@ private fun ElapsedTimeIndicator(
             duration = duration,
             knobSize = knobSize,
             onMoveLeft = rewind,
-            onMoveRight = skip,
+            onMoveRight = forward,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -162,7 +180,5 @@ private fun ElapsedTimeIndicator(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewPlayerControls() {
-    TvPlayerControls(
-        modifier = Modifier.fillMaxSize(),
-    )
+
 }

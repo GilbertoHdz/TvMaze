@@ -7,5 +7,7 @@ interface PlayerController {
     fun setup(playerConfig: PlayerConfig)
     fun play()
     fun pause()
+    fun forward()
+    fun rewind()
     fun fullscreen()
 }
