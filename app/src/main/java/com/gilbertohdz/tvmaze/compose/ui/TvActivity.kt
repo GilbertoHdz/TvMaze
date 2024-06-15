@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -32,7 +33,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class TvActivity : ComponentActivity() {
 
     @OptIn(ExperimentalTvMaterial3Api::class, ExperimentalComposeUiApi::class,
-        ExperimentalCoroutinesApi::class, ExperimentalAnimationApi::class
+        ExperimentalCoroutinesApi::class, ExperimentalAnimationApi::class,
+        ExperimentalFoundationApi::class
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

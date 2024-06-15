@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 
-import java.time.Duration
-
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 internal fun Seekbar(
@@ -33,7 +31,7 @@ internal fun Seekbar(
     modifier: Modifier = Modifier,
     onMoveLeft: () -> Unit = {},
     onMoveRight: () -> Unit = {},
-    knobSize: Dp = 8.dp,
+    knobSize: Dp = 10.dp,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     color: Color = MaterialTheme.colorScheme.onSurface,
 ) {
@@ -46,20 +44,21 @@ internal fun Seekbar(
         modifier
             .drawWithCache {
                 onDrawBehind {
-                    val knobRadius = knobSize.toPx() / 2
+                    val knobRadius = knobSize.toPx() / 1.8f
 
                     val start = Offset.Zero.copy(y = knobRadius)
                     val end = start.copy(x = size.width)
+                    val strokeWidth = knobSize.toPx() / 4f
 
                     val knobCenter = start.copy(
                         x = currentPosition.toFloat() / duration.toFloat() * size.width
                     )
                     drawLine(
-                        brush, start, end,
+                        brush, start, end, strokeWidth
                     )
                     if (isFocused) {
                         val outlineColor = color.copy(alpha = 0.6f)
-                        drawCircle(outlineColor, outlineSize.toPx() / 2, knobCenter)
+                        drawCircle(outlineColor, outlineSize.toPx() / 1.4f, knobCenter)
                     }
                     drawCircle(brush, knobRadius, knobCenter)
                 }

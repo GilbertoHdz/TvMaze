@@ -1,61 +1,52 @@
 package com.gilbertohdz.tvmaze.compose.ui.screens.player
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.IconButton
-import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
-import com.gilbertohdz.player.api.PlayerState
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
 import com.gilbertohdz.player.utils.logs.LogCompositions
-import com.gilbertohdz.player.utils.stringForTime
+import com.gilbertohdz.tvmaze.compose.ui.components.NextButton
+import com.gilbertohdz.tvmaze.compose.ui.components.PlayPauseButton
+import com.gilbertohdz.tvmaze.compose.ui.components.PreviousButton
+import com.gilbertohdz.tvmaze.compose.ui.components.RewindButton
 import com.gilbertohdz.tvmaze.compose.ui.components.Seekbar
+import com.gilbertohdz.tvmaze.compose.ui.components.SkipButton
 import com.gilbertohdz.tvmaze.compose.ui.theme.AppDefaults
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalTvMaterial3Api::class)
 @Composable
-fun PlayerControls(
+fun TvPlayerControls(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = hiltViewModel(),
-    getTitle: () -> String,
-    isFullScreen: Boolean,
-    onPauseToggle: () -> Unit,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
-    onReplay: () -> Unit,
-    onForward: () -> Unit,
 ) {
-    LogCompositions(tag = "PlayerControls")
+    LogCompositions(tag = "TvPlayerControls")
 
-    // UI
-    val title = remember(getTitle()) { getTitle() }
+    // Requesters
+    val controlsRowRequest = remember { FocusRequester() }
+    val playPauseButton = remember { FocusRequester() }
 
     // Behaviors
     val controlsVisibility = remember(viewModel.showControls) { viewModel.showControls }
@@ -65,29 +56,79 @@ fun PlayerControls(
     val buffer = remember(viewModel.bufferedPercentage) { viewModel.bufferedPercentage }
     val playerState = remember(viewModel.playerState) { viewModel.playerState }
 
+    LaunchedEffect(controlsVisibility) {
+        if (controlsVisibility) {
+            delay(100)
+            controlsRowRequest.requestFocus()
+        }
+    }
+
+    BackHandler(enabled = controlsVisibility) {
+        viewModel.showControls = !controlsVisibility
+    }
+
     AnimatedVisibility(
         modifier = modifier,
         visible = controlsVisibility,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        Box(
-            modifier = Modifier
-                .testTag("PlayerControlsParent")
-            // .background(EpicWorldTheme.colors.background.copy(alpha = 0.6f))
+        Column(
+            verticalArrangement = Arrangement.spacedBy(AppDefaults.gap.item),
+            modifier = modifier,
         ) {
+
+            ElapsedTimeIndicator(currentPosition, duration, {  }, {  })
+
             Row(
+                horizontalArrangement = Arrangement.spacedBy(
+                    AppDefaults.gap.default,
+                    Alignment.CenterHorizontally
+                ),
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .align(Alignment.Center)
                     .fillMaxWidth()
-                    .testTag("VideoControlParent"),
-                horizontalArrangement = if (isFullScreen) {
-                    Arrangement.Center
-                } else {
-                    Arrangement.SpaceEvenly
-                }
+                    .focusRequester(controlsRowRequest)
+                    .onFocusChanged {
+                        if (it.isFocused) {
+                            playPauseButton.requestFocus()
+                        }
+                    }
+                    .focusable(),
             ) {
-                ElapsedTimeIndicator(currentPosition, duration, {  }, {  })
+                PreviousButton(
+                    onClick = {  },
+                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                )
+
+                RewindButton(
+                    onClick = { },
+                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                )
+
+                PlayPauseButton(
+                    isPlaying = isPlaying,
+                    onClick = {
+                        if (isPlaying) {
+                            // pause()
+                        } else {
+                            // play()
+                        }
+                    },
+                    modifier = Modifier
+                        .size(AppDefaults.iconButtonSize.large.intoDpSize())
+                        .focusRequester(playPauseButton)
+                )
+
+                SkipButton(
+                    onClick = {  },
+                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                )
+
+                NextButton(
+                    onClick = { },
+                    modifier = Modifier.size(AppDefaults.iconButtonSize.medium.intoDpSize())
+                )
             }
         }
     }
@@ -121,14 +162,7 @@ private fun ElapsedTimeIndicator(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewPlayerControls() {
-    PlayerControls(
+    TvPlayerControls(
         modifier = Modifier.fillMaxSize(),
-        isFullScreen = false,
-        onForward = {},
-        onNext = {},
-        onPauseToggle = {},
-        onPrevious = {},
-        onReplay = {},
-        getTitle = { "" },
     )
 }
