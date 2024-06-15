@@ -1,8 +1,7 @@
 package com.gilbertohdz.player.ui.views
 
 import android.content.Context
-import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.view.SurfaceView
 import androidx.annotation.OptIn
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
@@ -24,12 +23,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.AspectRatioFrameLayout
-import androidx.media3.ui.PlayerView
 import com.gilbertohdz.player.api.PlayerController
 import com.gilbertohdz.player.api.internal.controllers.PlayerControllerImpl
 import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
 import com.gilbertohdz.player.utils.logs.LogCompositions
+import com.gilbertohdz.player.utils.logs.appLog
 
 
 @ExperimentalAnimationApi
@@ -79,25 +77,6 @@ internal fun Player(
     modifier: Modifier,
     onTouchScreen: () -> Unit
 ) {
-
-    val playerView = remember {
-        PlayerView(context).apply {
-            player = exoPlayer
-            // Disable player controls
-            useController = false
-            // Set resize mode to fill the available space
-            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
-            layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            setShowNextButton(false)
-            setShowPreviousButton(false)
-            setShowRewindButton(false)
-            setShowFastForwardButton(false)
-        }
-    }
-
     Box(
         modifier = modifier
             .background(Color.Black)
@@ -108,14 +87,21 @@ internal fun Player(
         DisposableEffect(key1 = Unit) {
             // Dispose the ExoPlayer when the Composable is disposed
             onDispose {
+                appLog(tag = "VideoPlayer", "onDispose")
                 exoPlayer.release()
             }
         }
 
+        // For media session before
+        // https://stackoverflow.com/questions/78133772/android-jetpack-compose-media3-hls-stream-with-playback-service
+
         AndroidView(
             modifier = modifier,
             factory = {
-                playerView
+                SurfaceView(context).also {
+                    exoPlayer.setVideoSurfaceView(it)
+                    // exoPlayer.videoScalingMode = VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+                }
             }
         )
     }
