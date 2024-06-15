@@ -31,16 +31,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.Player.STATE_ENDED
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.IconButton
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.gilbertohdz.player.api.PlayerController
+import com.gilbertohdz.player.ui.viewmodels.PlayerViewModel
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalTvMaterial3Api::class)
 @Composable
 fun PlayerControls(
     modifier: Modifier = Modifier,
+    viewModel: PlayerViewModel = hiltViewModel(),
+    playerController: () -> PlayerController,
     isVisible: () -> Boolean,
     isPlaying: () -> Boolean,
     videoTimer: () -> Long,
@@ -57,6 +62,7 @@ fun PlayerControls(
     onSeekChanged: (newValue: Float) -> Unit,
     onFullScreenToggle: (isFullScreen: Boolean) -> Unit
 ) {
+
     val visible = remember(isVisible()) { isVisible() }
 
     val playing = remember(isPlaying()) { isPlaying() }
@@ -309,6 +315,7 @@ fun PlayerControls(
 private fun PreviewPlayerControls() {
     PlayerControls(
         modifier = Modifier.fillMaxSize(),
+        playerController = {  PlayerController() },
         isVisible = { true },
         isPlaying = { true },
         videoTimer = { 0L },
